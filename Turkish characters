@@ -1,0 +1,22 @@
+**Latex Turkish characters :**
+
+\c{c} ---> ç
+\c{C} ---> Ç
+\u{g} ---> ğ
+\u{G} ---> Ğ
+{\i}  ---> ı
+\.{I} ---> İ
+\"{o} ---> ö
+\"{O} ---> Ö
+\"{u} ---> ü
+\"{U} ---> Ü
+
+**Here is some examples :**
+
+G\"{o}n\"{u}l  ---> Gönül
+P\i nar ----------> Pınar
+Bar{\i}\c{s} -----> Barış
+\"{O}zcan --------> Özcan
+\"{U}nsa ---------> Ünsal
+Do\u{g}an --------> Doğan
+\"{O}zye\u{g}in --> Özyeğin
