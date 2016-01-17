@@ -1,4 +1,4 @@
-**Latex Turkish characters :**
+Latex Turkish characters :
 
 \c{c} ---> ç
 \c{C} ---> Ç
@@ -11,7 +11,7 @@
 \"{u} ---> ü
 \"{U} ---> Ü
 
-**Here is some examples :**
+Here is some examples :
 
 G\"{o}n\"{u}l  ---> Gönül
 P\i nar ----------> Pınar
