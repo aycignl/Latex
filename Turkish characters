@@ -14,7 +14,7 @@ Latex Turkish characters :
 Here is some examples :
 
 G\"{o}n\"{u}l  ---> Gönül
-P\i nar ----------> Pınar
+P{\i}nar ----------> Pınar
 Bar{\i}\c{s} -----> Barış
 \"{O}mer ---------> Ömer
 \"{U}nsa ---------> Ünsal
