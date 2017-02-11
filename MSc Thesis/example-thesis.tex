@@ -1,0 +1,997 @@
+% Gonul AYCI
+% CS MSc thesis 
+% Jan. 2016
+
+
+\documentclass[a4,12pt]{ozu-thesis}
+
+\renewcommand{\refname}{REFERENCES}
+
+
+\usepackage{enumitem}
+\newlist{abbrv}{itemize}{1}
+\setlist[abbrv,1]{label=,labelwidth=1in,align=parleft,itemsep=0.1\baselineskip,leftmargin=!}
+
+\makeatletter
+\renewcommand{\@chapapp}{}% Not necessary...
+\newenvironment{chapquote}[2][2em]
+  {\setlength{\@tempdima}{#1}%
+   \def\chapquote@author{#2}%
+   \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
+   \itshape}
+  {\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
+\makeatother
+
+\usepackage{blindtext}
+\usepackage[utf8]{inputenc}
+\usepackage{listofsymbols}
+\usepackage[english]{babel}  % force American English hyphenation patterns
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
+\usepackage{amsmath,amssymb,latexsym,float,epsfig,subfigure}
+\usepackage[export]{adjustbox}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm,algpseudocode}
+\usepackage[utf8]{inputenc} % unicode
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+\usepackage{epigraph}
+\usepackage{longtable}
+
+
+
+\title{ FUSION OF SUBJECTIVE OPINIONS THROUGH BEHAVIOR ESTIMATION} 
+
+\author{G\"{o}n\"{u}l AYCI}
+\department{Department of Computer Science}
+
+% The First Member is your Advisor. 
+\firstmember{Assoc.Prof. Murat \c{S}ensoy, Advisor}
+
+% The next member is your second advisor - if exists. Otherwise, it will be your external examiner.
+\secondmember{Asst.Prof. Reyhan Aydo\u{g}an, Co-advisor}
+% Include the other members of your committee. 
+\thirdmember{Asst.Prof. Hasan S\"{o}zer }
+
+\fourthmember{Asst.Prof. Tankut Bar{\i}\c{s} Aktemur}
+\fifthmember {Prof. P\i nar Yolum}[Department of Computer Engineering]
+[Bo\u{g}azi\c{c}i University]
+
+
+
+\degree{Master of Science}
+\copyrightyear{2016}
+\submitdate{January 2016} % Must be the month and year of graduation,
+                         % not thesis approval! 
+ 
+%% on the approval page.
+\approveddate{15 January 2016}
+
+\bibfiles{example-thesis}
+
+\begin{document}
+
+% We will use the standard IEEE transactions bibliography style in the thesis format. 
+\bibliographystyle{ieeetr}
+%%
+
+\begin{preliminary}
+
+%%
+\begin{dedication}
+\null\vfil
+{\large
+\begin{center}
+To my family.
+\end{center}}
+\vfil\null
+\end{dedication}
+%%
+
+%%
+\begin{abstract}
+Information is significantly important in almost all decision-making process. A decision-maker agent collects information from diverse sources. Thus, it should correctly fuse opinions, which are shared from different information sources. However, some of information sources may be unreliable and malicious. That is, some of information sources may behave differently while sharing their opinions. Thus, the decision-maker agent needs to eliminate opinions that these opinions are collected from such kind of information sources. Motivated by this observation, in this thesis, we propose a statistical information fusion approach based on behavior estimation. In this approach, before estimation of fusion, we estimate behavior of information sources based on their statistical values. Then, we enhance information fusion process based on our estimation for behavior of information sources. Through extensive simulations, we have shown that our approach has a low computational complexity, and achieves significantly low behavior estimation and fusion errors.
+
+\end{abstract}
+%%
+
+%%
+\begin{ozetce}
+Bilgi hemen hemen her karar verme sürecinde oldukça önemlidir. Karar veren temsilci çeşitli kaynaklardan bilgiler toplar. Bu nedenle karar veren temsilci farklı bilgi kaynaklarından toplamış olduğu bilgileri doğru bir şekilde birleştirmelidir. Bununla birlikte bazı bilgi kaynakları güvenilmez veya yalancı olabilir. Yani, bazı bilgi kaynakları fikirlerini paylaşırken farklı şekilde davranabilir. Bu nedenle karar veren temsilci bu tip kaynaklardan gelen bilgileri elemelidir. Bu gözlemden yola çıkarak biz bu çalışmamızda davranış tahminine dayalı olarak istatiksel bilgi tümleştirme yaklaşımı önerdik. Bu yaklaşımımızda öncelikle elde ettiğimiz istatiksel değerlere uygun dönüşüm fonksiyonu uygulayarak bilgi kaynaklarının davranışlarını tahmin ediyoruz. Bu tahmine dayalı olarak bilgi tümleştirme işlemini gerçekleştiriyoruz. Geniş çaplı simülasyonlar vasıtasıyla, biz gördük ki yaklaşımımız oldukça düşük oranda hesaplama karmaşıklığına sahip ve önemli derecede düşük davranış tahmini ve tümleştirme hatası ile işlemini gerçekleştiriyor.  
+
+
+\end{ozetce}
+%%
+
+%%
+\begin{acknowledgements}
+\begin{chapquote}
+{Richard Feynman, \textit{The Character of Physical Law}}
+``Mathematics is a language plus reasoning; it is like a language plus logic. Mathematics is a tool for reasoning.''
+\end{chapquote}
+
+There are so many people to thank for helping me. I would like to give thanks directly and indirectly.
+
+Firstly, I would like to express my sincere gratitude to my advisor Assoc.Prof. Murat \c{S}ensoy  for the continuous support of my Master study and related research, for his patience, motivation, and immense knowledge.  I have been amazingly fortunate to have an advisor who gave me the freedom to explore on my own, and at the same time the guidance to recover when my steps faltered. His guidance helped me in all the time of research. I could not have imagined having a better advisor and mentor for my Master study.
+
+My co-advisor, Asst.Prof. Reyhan Aydo\u{g}an, has been always there to listen and give advice. I am deeply grateful to her for the long discussions that helped me sort out the technical details of my work. I am also thankful to her for encouraging the use of correct grammar and consistent notation in my writings and for carefully reading and commenting on countless revisions of this manuscript.
+
+Besides my advisor and co-advisor, I would like to thank the rest of my thesis committee: Prof. P{\i}nar Yolum, Asst.Prof. Hasan S\"{o}zer, and Asst.Prof. Tankut Bar{\i}\c{s} Aktemur for their insightful comments and encouragement, but also for the hard question which incented me to widen my research from various perspectives.
+
+I owe my great thanks to my family for supporting me spiritually throughout writing this thesis and my life in general. They were always encouraging me with their best wishes.
+
+I extend my special thanks to Dr. Lance M. Kaplan, and Geeth de Mel for sharing their expertise, and guiding my research.
+
+I would like to give special thanks to my graduate friends who are from my lab. and an engineering department. First, I wish to express my sincere thanks to Dr. Volkan Yaz{\i}c{\i}, and M.Sc. Murat K{\i}rtay for enlightening me glance of research. I am also grateful to Dr. Ay\c{s}e Karag\"{o}z, Dr. Buse Y{\i}lmaz, Can Eren Sezener, Nekruzdzhon Maxudov, and M.Sc. Bar{\i}\c{s} \"{O}zcan. I thank all of them for their guidance during my thesis and Master period.
+
+One of the important aspect of my graduate year is to work with talented undergraduate student who is Taha Do\u{g}an G\"{u}ne\c{s}. I am in certain that he will achieve his goals in future.
+
+I extend my thanks to Assoc.Prof. Ali Fuat Alkaya in the Computer Engineering Department at Marmara University, and Asst.Prof. Gonca G\"{u}rsun in the Department of Computer Science at \"{O}zye\u{g}in University for their supports especially in my last term of Master. 
+
+I gratefully acknowledge the support and guidance of Administrative Supervisor, The School of Engineering at \"{O}zye\u{g}in University, Banu Polat. She provides and encourages me whenever I need. I am blessed to have spent time with her.
+
+I want to thank Aysoltan Ymamgulyyeva for her help.
+
+Many friends have helped me stay sane through these difficult years. Their support and care helped me overcome setbacks and stay focused on my graduate study. I greatly value their friendship and I deeply appreciate their belief in me.
+
+I take this opportunity to express gratitude to all of the Engineering Department faculty members for their help and support.
+
+\newpage
+\textbf{Statement of Funding}
+
+I would especially like to thank the U.S. Army Research Laboratory for its support under grant W911NF-14-1-0199 and The Scientific and Technological Research Council of Turkey (TUBITAK) for its support under grant 113E238. 
+
+
+\end{acknowledgements}
+%%
+
+
+\contents
+
+\thispagestyle{empty}
+
+\chaptermark{List of Abbreviations}
+\centering{ \textbf{ List of Symbols/Abbreviations}}
+
+\begin{abbrv}
+
+
+\item[b]                    Belief - Belief space parameter
+\item[d]                    Disbelief - Belief space parameter
+\item[\textit{e}]                    The computed evidence vector
+\item[r]                    Positive evidence - Evidence space parameter
+\item[s]                    Negative evidence - Evidence space parameter
+\item[u]                    Uncertainty - Belief space parameter
+\item[W]                    Non-informative prior weight
+\\
+\item[BN]                   Bayesian Networks
+\item[CPD]                  Conditional Probability Distribution
+\item[DAG]                  Directed Acyclic Graph
+\item[DST]                  Dempster-Shafer Theory
+\item[LBN]                  Learning Bayesian Networks
+\item[MC]                   Monte Carlo
+\item[PL]                   Probabilistic Logic
+\item[pdf]                  Probability density function
+\item[pmf]                  Probability mass function
+\item[SL]                   Subjective Logic
+\\
+\item[$a_{x}$]                     Base rate vector about proposition \textit{x}
+\item[$b_{x}$]                     Belief value about proposition \textit{x}
+\item[$c_{m}$]                     Clusters of similar opinions
+\item[$d_{x}$]                     Disbelief value about proposition \textit{x}
+\item[$u_{x}$]                     Uncertainty value about proposition \textit{x}
+\item[$z^{m}$]                     Estimated behavior of the sources for a new proposition 
+\item[$E_{x}$]                     Expectation value of a binomial opinion about \textit{x} in belief space
+\item[$Var_{x}$]                   Variance of a binomial opinion about \textit{x} in belief space
+\item[$S_{x}$]                     Set of opinions about a proposition \textit{x}
+\item[$t^{s}$]                     Probabilities of behavior profile vector for a specific source \textit{s} 
+\item[$p^{s}$]                     Actual behavior probabilities vector for a specific source \textit{s} 
+\item[$t^{s}_{i}$]                 Expected probability vector that the source has the behavior \textit{i}
+\\
+\item[ \textit{ B(.)}]                    Beta function
+\item[\textit{ L(.)}]                     Likelihood Function
+\item[ $ m(.)$]                       Mapping function
+\item[\textit{ p(.)}]                     Probability function
+\item[\textit{ op(.)}]                    Transformation operator from evidence space parameters to belief space parameters
+\item[\textit{ O(.)}]                     Complexity 
+\item[$\psi (.)$]                         Mapping function
+\item[$\psi (.) ^{-}$]                    Reverse of mapping function
+\item[$\varphi _{i}(.)$]                  Tranformation function for type of behavior \textit{i}
+\item[$\alpha^{a:x}$]                     Evidences of the agent's opinion for the proposition
+\item[$\alpha^{s:x}$]                     Evidences of the information sources's opinion for the proposition
+\\
+\item[ $\alpha$]                               Distribution parameter
+\item[ $\beta$]                                Distribution parameter
+\item[$\delta$]                                Threshold
+\item[ $\omega$ ]                              Binomial Opinion	
+\item[ $\omega_{x}$]                           Binomial Opinion about binary proposition \textit{x}
+\item[ $\omega^{s}$]                           Binomial Opinion of a source \textit{s}
+\item[$\omega^{s}_{x}$]                     Binomial Opinion of a source \textit{s} regarding the binary proposition \textit{x}
+\item[$\omega^{s:x}$]                     Binomial Opinion of a source \textit{s} regarding the binary proposition \textit{x}
+\item[$\bigoplus $]                            Consensus fusion operator
+\item[$\bigotimes $]                          Discounting operator
+
+\end{abbrv}
+
+\end{preliminary}
+%%
+
+%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}
+\epigraph{All our dreams can come true, if we have the courage to pursue them.}{Walt Disney}
+
+In multiagent systems, agents observe their environment through their sensors and retrieve information from information sources to learn more about their environment. They may need to merge information gathered from multitude of sources. However, some of the information sources may be unreliable. That is, they may provide inaccurate information deliberately or unintentionally. Such kind of malicious and noisy information may mislead the agent about the ground truth. In this case, we can be far from the ground truth. That may lead the agent to make wrong decisions.
+
+This thesis proposes the development of statistical information fusion approaches based on behavior estimation.  In this thesis, we consider the cases where information source can adopt different behaviors while sharing their opinions.  We try to learn the behavior of information sources by analysing their past observations. In our framework, information sources share their subjective opinions about binomial or multinomial propositions. A subjective opinion about a proposition is represented using Beta and Dirichlet distributions, which are the likelihood of the probability that the proposition is true. In our framework, for each source, we calculate behavior probabilities of information sources using maximum likelihood function. Then we predict behavior of information sources using the calculated source behavior probabilities that based on clustering of similarities among shared opinions. Finally, we need to estimate the ground truth to combine with estimated behaviors of information sources. Consequently, we can obtain fusion of information applying specific transformation based on them. Using extensive simulations, we have shown that our approach successfully estimates source behavior and gets low fusion errors.
+
+Furthermore, we argue that information sources may behave differently in different contexts, which are defined by the features of the queried proposition. We make some preliminary studies for learning a Bayesian Network to capture dependencies between the features of proposition and the behavior probabilities. In these studies, we predict that our approach to automatically can learn types of information sources so that it can capture new behavior models and incorporate those modes into the framework.
+
+The rest of the thesis is organized as follows. In Chapter II, we briefly introduce the motivation of given opinion and learning approach, and provide preliminary information. For this purpose, we define Beta \& Dirichlet distributions and introduce Subjective Logic (SL), which is used for analyzing belief networks with uncertainty. This chapter also presents the Bayesian Networks. Chapter III is the main chapter of this thesis. It describes behavior of information sources, and modeling information sources, fusion of opinions. It also provides evaluation. Then Chapter IV presents a context-aware behavior estimation model. In this chapter, we try to estimate behaviors of information sources automatically. Lastly, Chapter V concludes with a summary of main contributions and draws directions for future work.
+
+
+%%%%%%%%%%%%%%%%%%%
+\chapter{Background}
+\epigraph{``What I cannot create, I do not understand.''}{Richard Feynman}
+In this section, we present an overview of existing work on trust-based fusion approaches and provide the necessary background regarding Beta and Dirichlet distributions and Subjective Logic.
+
+\section{Trust-Based Fusion }
+There are several fusion approaches in the literature. J{\o}sang and Ismail have proposed the beta reputation system (BRS) to estimate the likelihood of a proposition using beta probability density functions \cite{commerce2002beta}. For this purpose, they have used a mechanism that considers a beta distribution with aggregated ratings of sources as its input parameters. We note that the evidence shared by sources are equivalent to binary opinions in Subjective Logic \cite{josang2011subjective}. Whitby {\it et al}. extended the BRS to handle misleading opinions from malicious sources using a majority-based algorithm \cite{whitby2004filtering}, whereas Teacy et al. have proposed TRAVOS \cite{teacy2006travos} that uses personal observations about information sources to estimate their trustworthiness as we do in this thesis. All of these approaches model the trustworthiness of information sources and use the estimated trust to discount opinions during fusion. They, however, do not consider various behaviors of information sources. Thus, these approaches are similar to the discounted consensus method used in our evaluations. There are other trust-based fusion approaches that consider different behaviors of malicious sources and exploit these behaviors during fusion. For instance, BLADE \cite{regan2006bayesian} and HABIT \cite{teacy2012efficient} can exploit the flipping behavior of sources— i.e., sources deliberately flip their opinions before sharing— whilst fusing. However, these approaches consider only the expectation probabilities of behaviors during the fusion as behavioral discounted consensus does. 
+
+
+Furthermore, there are also trust-based fusion approaches for untrustworthy information provided from a crowd of observers. For instance, \cite{venanzi2013trust} model untrustworthy estimates and developed a trust-based fusion method that is similar to the DS belief fusion, which has particular limitation.
+
+In the literature, there are various trust-based approaches that combine information from unreliable sources to estimate ground
+truth. These approaches estimate the truth by utilizing information only from reliable sources \cite{teacy2006travos, whitby2004filtering}. They do not differentiate between different malicious behaviors and simply filter outs information from untrustworthy sources. However, in many settings, there is no source that consistently provide useful information. In such settings, most of the existing approaches may fail due to the lack of reliable sources.
+
+
+%RA: Gonul, yanlis hatirlamiyorsam, Murat hoca Subjective Logic kismini kaldirmani istemisti ya da direk paper'daki kadarini yazmani istedi gibi hatirliyorum. Bu kismi yarin Murat hocaya sorabilir misin? PDF ini gonderip sorabilirsin.
+
+\section{Probabilistic and Subjective Logic}
+
+Subjective Logic(SL) is a type of probabilistic logic for reasoning under uncertainty and incomplete knowledge. It is based on Dempster-Shafer theory (DST), which is a type of probabilistic logic that can be used for uncertainty and incomplete knowledge system such as modeling trust network and analysing Belief networks.
+
+
+Dempster brought forward the Belief theory as a framework in the 1960s. In the sequel, Shafer enhanced the theory and published it in his book \cite{shafer1976mathematical} in 1976. After that time the theory started to be mentioned as Dempster-Shafer's belief theory (DST). In 1991 Lucas and Van Der Gaag \cite{lucas1991principles} presented DST briefly. Furthermore, we need to clearly understand and implement DST to several applications. There are some studies about validation of DST such as \cite{dezert2012validity}.
+
+
+Probability represents the calculation of the likelihood of a given event's occurrence, and it takes a value between 0 and 1 that the value changes according to the problem. For instance, 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|r|l|}
+  \hline
+  $\mathbf{0}$ &  \textit{absent, close, no, false} \\
+  \hline \hline
+  $\mathbf{1}$ & \textit{present, open, yes, true} \\
+  \hline
+\end{tabular}
+\caption{Values}
+\label{table:values}
+\end{table}
+
+
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{probLogic.png}
+\end{center}
+\caption{Pobabilistic logic}
+\label{fig:pl}
+\end{figure}
+
+Figure~\ref{fig:pl} illustrates, probabilistic logic (PL) occurs the intersection of probability and logic. Nilsson, who was the first defined probabilistic logic \cite{nilsson1986probabilistic}, expressed for using reasoning models (in general). However, there is a difference between PL and SL, which is the case of the uncertainty.
+\\In probabilistic logic which also called as standard logic, propositions are evaluated to be either true or false, so standard logic has a restriction. Restriction means that it can be seen in this example: a statement of response contains with the same output binary logic e.g.  $\left \{ 0, 1 \right \}$ or  $ \left \{ false, true \right \}$, but one of the other possible response can be \textit{"I have no idea"} or \textit{"I do not know"}. Standard logic cannot to express input arguments with degrees of ignorance, so as a default these are assign to the \textit{no} statement. Therefore, by using subjective logic, every probability can be evaluated more correctly in real word situations.
+
+
+The traditional logical operators such as AND and OR are the missing part of the classical DST. Thanks to SL, these missing parts were completed.
+
+
+SL was described by Audun Josang in 1997 \cite{josang1997artificial}. Then, SL continued to be defined in a more detailed way. He published a book called 'Subjective Logic' in 2011 \cite{josang2011subjective}, and this book presents definition of SL, the usage of mathematical operation and properties on operators, and applications of SL throughly.
+
+
+There are different formalisms other than SL to model degrees of uncertainty e.g. the Bayesian model of subjective probabilities is the oldest one. The Bayesian model has different theories and DST is the best-known. In this respect, argument of SL is related to the belief functions in the well-known DST. DST proposes an efficient theoretical framework. The theory of belief functions serve the purpose of modeling uncertainty, and it is a general form of the Bayesian theory of subjective probability. Belief function gives an idea about the relation between two propositions on probabilities.
+
+\section{Beta and Dirichlet Distributions}
+The  Beta distribution is a family of continues probability distributions, which is a probability density function (pdf) for possible values of the probability mass function (pmf) $\textit{p}$. The Beta distribution describes the probability for a state defined on the interval $\left [ 0, 1 \right ]$. For instance, if you have an event with an unknown probability \textit{p}, you can provide some information about that value with a Beta distribution. Furthermore, $Beta\left ( \mathbf{1, 1} \right )$ represents that you have no information about \textit{p} or you have random information about \textit{p}. That is, it is equally likely to take all values between 0 and 1 inclusive. 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.6]{BN7.png}
+\end{center}
+\caption{The shape of pdf for different values of Beta distribution}
+\label{fig:pdf}
+\end{figure}
+
+Figure~\ref{fig:pdf} demonstrates that how changing the value of the parameters alters the shape of the pdf. For instance, when $\alpha = \beta = 1$, which represents $Beta(1, 1)$, the Beta distribution simplifies to the standart Uniform distribution on $\left [ 0, 1 \right ]$.
+  
+
+The Beta pdf denoted as $Beta\left ( \mathbf{p|\alpha, \beta} \right )$ where $\alpha$ and $\beta$ are two evidence parameters and expressed as:
+
+\begin{equation}
+f_{\beta }\left ( \mathbf{p|\alpha,\beta} \right ) = \frac{1}{B\left ( \alpha, \beta \right )}\mathbf{p}^{\alpha-1}\left ( \mathbf{1-p} \right )^{\beta-1},
+\end{equation}
+
+
+\begin{center}
+where $0\leq \mathbf{p}\leq 1, \alpha> 0, \beta> 0 $.
+\end{center}
+
+The Beta function is equal to a ratio of Gamma functions:
+
+\begin{equation}
+B\left ( \alpha, \beta \right ) = \frac{\Gamma \left ( \alpha \right )\Gamma \left ( \beta \right )}{\Gamma \left ( \alpha+\beta \right )}
+\end{equation}
+
+
+The Dirichlet distribution gives the probability density of possible values of the probability mass function (pmf) $\mathbf{p}$  that describes the probability for the manifestation of the particular state from the $\mathit{K}$ attribute states. It is characterized by $\mathit{K}$ parameters $\mathit{\alpha}$ and is given by 
+
+
+\begin{equation}
+f_{\beta }\left ( \mathbf{p|\alpha} \right ) = \left\{\begin{matrix} \frac{1}{B\left ( \alpha \right )}\prod_{i=1}^{\mathit{K}} \mathit{p_{i}^{\alpha_{i}-1}}&;    \mathbf{  p} \epsilon \mathit{ S_{K}}$$,\\ 
+$$0 &        otherwise, \end{matrix}\right.,
+\end{equation}
+\\where $\mathit{ S_{K}}$ is the $\mathit{K}$-dimensional unit simplex,
+
+\begin{center}
+$\mathit{ S_{K}} = \begin{Bmatrix} \mathbf{p}|\sum_{i=1}^{K} \mathit{p_{i}=1} & and  & 0\leq \mathit{p_{1},\ldots,p_{K}\leq 1} \end{Bmatrix}$,
+
+\end{center}   
+
+and
+
+
+\begin{subequations}
+\label{eq:optim}
+\begin{align}
+    B\left ( \alpha \right ) & = \int_{\mathit{ S_{K}}}\left ( \prod_{i=1}^{K}  \mathit{p_{i}^{\alpha_{i}-1}}\right ) d\mathbf{p}   \label{eq:cost}\\
+   & =\frac{\prod_{i=1}^{K} \Gamma \left ( \alpha_{i} \right )}{\Gamma \left ( \sum_{i=1}^{K} \alpha_{i} \right )} \label{eq:const1}
+\end{align}
+\end{subequations}
+
+
+is the $\mathit{K}$-dimensional multinomial beta function \cite{johnson2002continuous}. The $\beta$ in the subscript of $f_{\beta}\left ( . \right )$ is used to signify that the pdf is Dirichlet. A general pdf is presented without the subscript as $f\left ( . \right )$. When $\mathit{K} = 2$, the Dirichlet distribution simplifies to the beta distribution while considering the restriction that the probability variable $p \neq 0$ if $\alpha < 1$, and $p \neq 1$ if $\beta < 1$.
+%\\When $K=2$, we have only two parameters, which are $\alpha$ and  $\beta$ represents the Beta distribution (Equation 1). 
+
+\section{Subjective Opinions}
+%RA Binomial opinion can be represented with a Beta distribution, which is a single proposition such as diyip bir ornek verebilirsin. Murat hoca ile yazdigimiz ilk commentte bu tarz bir ornek vardi. Ayni sekilde multinominal opinion a da direk bir ornek verebilirsen okuyan kisi tam olarak ne demek istediginizi anlar. 
+
+Subjective opinions are beliefs about propositions with degrees of uncertainty. Binomial opinion can be represented with a Beta distribution, which is a single proposition. Similarly, a multinomial opinions represent as a Dirichlet distribution, which comes to a set of propositions. This is all to say, a generalisation of the Beta distribution can be seen as the Dirichlet distribution in the same way a generalisation of binomial opinions can be seen as a multinomial opinions.
+
+
+In this thesis, we adopt SL proposed by Jøsang \cite{josang2011subjective}, which can be considered as an interpretation and extension of DST. SL is a probabilistic logic where propositions such as the location of a crime in a city can take on one of \textit{K} mutually exclusive attributes, e.g., city districts, at any observation time \cite{josang2001logic, josang2011subjective}. In general a binomial opinion is represented by a triple $\omega _{x} = \left ( b_{x}, d_{x}, u_{x}\right )$, which is derived from the basic probability masses assigned to subsets of truth assignments. In the opinion $\omega _{x}, b_{x}$ is the belief about \textit{x} — the summation of the probability masses that entail \textit{x}; $ d_{x}$ is the disbelief about \textit{x}— the summation of the probability masses that entail $\neg x$; and $u_{x}$ is the uncertainty about \textit{x} — the summation of the probability masses that neither entail \textit{x} nor entail $\neg x$. The constraints over the probability mass assignment function require that $b_{x} + d_{x} + u_{x} = 1$ and $b_{x}, d_{x}, u_{x} \epsilon \left [ 0, 1 \right ]$, where $u_{x} = 1 - b_{x} - d_{x}$.  Furthermore, agents represent their opinion such as $\omega _{x}^{s} = \left ( b_{x}^{s}, d_{x}^{s}, u_{x}^{s}  \right )$, where the subscript \textit{x} implies that the proposition to which the opinion applies, and the superscript \textit{s} implies that the subject agent who holds the opinion. In this thesis, when the proposition and agent are implicit, the superscripts and subscripts are not used. In SL, a binomial opinion about a binary proposition \textit{x} is represented by $\omega _{x} = \left ( b_{x}, d_{x}, u_{x}, a_{x}, W \right )$. In this representation \textit{a} is a base rate and \textit{W} denotes non-informative prior weight, which are set to $a = 0.5, W = 2$, respectively. In this study, we represent opinions as a triple. That is, opinions about the common proposition may have the same base rate vector, and non-informative prior weight. Thus, we can ignore these components. 
+
+
+ The subjective opinion characterizes the belief in the probabilities that any of the \textit{K} will appear at a given observation time. The subjective opinion also characterizes the uncertainty related to these beliefs. Formally, SL considers a frame of \textit{K} mutually exclusive singletons by providing a belief mass  $ \mathit{b_{k}}$ for each singleton  $ \mathit{k} = 1,\ldots,K $  and providing an overall uncertainty mass of  $\mathit{u}$. These  $ \mathit{K}+1 $   mass values are all non-negative and sum up to one, i.e.,
+ 
+\begin{equation}
+\label{eq:sum}
+ u + \sum_{k=1}^{K} b_{k} = 1,
+\end{equation}
+
+
+\begin{center}
+where $u\geq 0 $ and $b_{k}\geq 0 $ for $k = 1,\ldots, K $..
+\end{center}
+
+
+
+%RA: Asagidaki kisimi eklemek istiyorsan bunu footnote a eklemen daha dogru olabilir. Murat hocanin da bu konuda fikrini alabilirsen iyi olur. In general agents represent by their opinion such as $\omega _{x}^{s} = \left ( b_{x}^{s}, d_{x}^{s}, u_{x}^{s}  \right )$, where the subscript \textit{x} implies that the proposition to which the opinion applies, and the superscript \textit{s} implies that the subject agent who holds the opinion. In this thesis, when the proposition and agent are implicit, the superscripts and subscripts are not used. 
+
+
+
+%SL includes a base rate probability $a_{k}$ for each singleton and a non-informative prior weight $W$, which are same for all opinions about the same proposition. The collection of all the parameters for agent $s$ about proposition $x$ forms agent $s'$s subjective multinomial opinion $\omega ^{s:x} = \begin{bmatrix} \left ( b^{s:x} \right )^{T} & u^{s:x}  & \left ( a^{x} \right )^{T}  & W\end{bmatrix}^{T}$.
+
+
+The base rate values represent initial (or a priori) information about the probability of a singleton emerging for any given observation. The inclusion of the belief and uncertainty values along with the base rates and non-informative prior weight represent the accrued evidence regarding the probability of any singleton appearing in an observation. For each singleton, we can compute the amount of evidence observed using the multinomial opinion values:
+
+\begin{equation}
+\label{eq:std}
+e_{k} = \frac{W b_{k}}{u}
+\end{equation}
+
+
+The computed evidence vector $e$ can be used to compute the parameter vector $\alpha$ for a Dirichlet distribution via
+
+
+\begin{equation}
+\alpha_{k} = e_{k} + Wa_{k}
+\end{equation}
+ 
+
+Therefore, we have $\alpha = e + Wa$. The Dirichlet distribution represented by this parameter vector represent the possible pmf that is controlling how singletons appear in observations. Likewise, using (\ref{eq:sum}), solving for $b_{k}$ and $u$ in (\ref{eq:std}) for $k=1,\ldots,K$, leads to the mapping of evidence vector $e$ (and do $\alpha$) to the multinomial opinions
+
+
+\begin{subequations}
+\label{eq:optim}
+\begin{align}
+    u &= \frac{W}{\sum_{i}e_{i}+W},   \label{eq:cost}\\
+    b_{k}  &= \frac{e_{k}}{\sum_{i}e_{i}+W} \label{eq:const1}
+\end{align}
+\end{subequations}
+
+
+Using subjective opinions, we can show such kinds of logics; true/false values in binary logic or membership values in fuzzy logic. For instance; the opinion (1, 0, 0) implies that the proposition is \textit{true}; while (0, 1, 0 ) indicates that the proposition is \textit{false}, and (0, 0, 1) represents that the opinion -- $\omega _{x} $  is a vacuous opinion such as with zero belief mass.  Similarly, if an opinion such as (0.5, 0.5, 0.0) implies that the proposition is both \textit{true} and \textit{false} with same belief masses. In addition to this, we have some uncertainties if an opinion such as (0.2, 0.3, 0.5) represents that the proposition is both \textit{true}, \textit{false} and \textit{unknown}. In this example, we have 50 \% uncertainty for the proposition.
+
+
+Furthermore, we assume that opinions are formed on the basis of positive and negative evidence. Let \textit{r} and \textit{s} be the number of positive and negative evidences (i.e., equivalently weighted pieces of evidence) about the proposition \textit{x}, respectively. Then, an opinion composed of \textit{b}, \textit{d}, and \textit{u} is computed based on evidence \textit{r} and \textit{s} as in Equation~\ref{eq:rs}.
+
+
+%%%%%%%%%%%%%%%%
+\begin{equation}
+\label{eq:rs}
+op(r, s) = (b, d, u) = \left ( \frac{r}{r+s+2}, \frac{s}{r+s+2}, \frac{2}{r+s+2} \right )
+\end{equation}
+%%%%%%%%%%%%%%%%
+
+
+In Equation~\ref{eq:rs}, we clearly show that the transformation from belief space parameters (\textit{b, d, u}) to evidence space parameters (\textit{r, s}). There is a transformation that the evidence space parameters to the belief space parameters as follows:
+
+
+%%%%%%%%%%%%%%%%
+\begin{subequations}
+\label{eq:optim}
+\begin{align}
+    r &= \frac{2*b}{u},   \label{eq:cost}\\
+   s &= \frac{2*d}{u} , \label{eq:const1}
+\end{align}
+\end{subequations}
+%%%%%%%%%%%%%%%%
+
+In addition to these descriptions, we also have the projected probability and variance of a binomial opinion on \textit{x} is defined as follow, respectively:
+
+
+%%%%%%%%%%%%%%%%
+\begin{align}
+   E_{x} &= b_{x} + a_{x}u_{x}, \\
+   Var_{x} &= \frac{P_{x}\left ( 1-P_{x} \right )u_{x}}{W+u_{x}}
+\end{align}
+%%%%%%%%%%%%%%%%
+
+where \textit{W} denotes non-informative prior weight, which must be set to $W = 2$.
+
+
+%%%%%%%%%%%%%%%%
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.4]{triangle.png}
+\end{center}
+\caption{Opinion triangle for binomial opinions with an example opinion \cite{josang2011subjective}}
+\label{fig:triangle}
+\end{figure}
+%%%%%%%%%%%%%%%%
+
+
+Figure~\ref{fig:triangle} illustrates that the \textit{Expectation value of x} in belief space. There is a mapping between an opinion $\omega$ and Dirichlet distribution parameters vector $\alpha$
+
+
+In the rest of this thesis, we mostly use corresponding Dirichlet distribution parameters to refer opinions \cite{sensoy2015fuse}. However, in order to explain how SL combines opinions, we use the mapping function $\psi \left ( \omega  \right ) = \alpha$ and its reverse $\psi^{-} \left ( \alpha  \right ) = \omega$. Given a set of opinions $S_{x} = \left \{ \omega _{x}^{1},\ldots, \omega _{x}^{n}  \right \}$ about a proposition $x$, SL defines consensus fusion operator $\oplus $ to combine these opinions as follows \cite{josang2002consensus}:
+
+%%%%%%%%%%%%%%%%
+\begin{equation}
+\oplus \left ( S_{x} \right ) = \psi ^{-}\left ( Wa^{x} + \sum_{\omega \epsilon S_{x}}\left ( \psi \left ( \omega  \right ) - Wa^{x}\right ) \right )
+\end{equation}
+%%%%%%%%%%%%%%%%  
+  
+That is, evidence vectors provided by opinions are added up to generate the evidence vector for the fused opinion.
+
+\section{Bayesian Networks}
+Bayesian Networks (BN) is a member of probabilistic graphical models for modelling uncertainty. BN is a powerful tool for subjective logic. Bayesian networks are also useful for representing flexible applicability \cite{de2003probabilistic}.
+BN is a directed acyclic graph (DAG) where the nodes denote the random variables and the edges shows their conditonal dependencies
+
+%%%%%%%%%%%%%
+\begin{equation}
+\label{eq:bayes}
+p\left (C|T \right ) = \frac{p\left ( T|C \right )p\left ( C \right )}{p\left ( T|C \right )p\left ( C \right ) + p\left ( T|\overline{C} \right )p\left ( \overline{C} \right )}
+\end{equation}
+%%%%%%%%%%%%%
+
+
+Equation~\ref{eq:bayes} illustrates Bayesian inference with Boolean variables. In this equation, $p(C)$ denotes the prior probability of an issue belonging to class $C$ where $p(T|C)$ is the likelihood of observing $T$ when the given issue belongs to $C$. Note that $p(T)= p\left ( T|C \right )p\left ( C \right ) + p\left ( T|\overline{C} \right )p\left ( \overline{C} \right )$ is the evidence that is the probability of observing $T$ where $p(C|T)$ is the posterior probability---the probability of the given issue, $T$ belonging to $C$.
+
+%%%%%%%%%%%%%
+\begin{align}
+\label{eq:bayesCont}
+p\left ( \theta | y, n \right ) = \frac{p\left ( y| \theta , n \right )p\left ( \theta |n \right )}{p\left ( y|n \right )}
+\end{align}
+%%%%%%%%%%%%%
+
+Equation~\ref{eq:bayesCont} illustrates Bayesian inference with continues variables. In this equation, a normalizing constant equals as follows: 
+
+%%%%%%%%%%%%%
+\begin{align}
+\label{eq:normal}
+\int p\left ( y|\theta ,n \right )p\left ( \theta |n \right )d\theta 
+\end{align}
+%%%%%%%%%%%%%
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.4]{BN5.png}
+\end{center}
+\caption{Bayesian inference with continuous variables \cite{cmu1}}
+\end{figure}
+%%%%%%%%%%%%%
+
+
+ Conditional dependency relations(arcs) from node A to another node B represent; node B is a child of node A or put it differently the node A is a parent of node B such in Figure~\ref{fig:prob}.
+
+
+%%%%%%%%%%%%%
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{BN3.png}
+\end{center}
+\caption{Types of probabilistic relationships \cite{cmu1}}
+\label{fig:prob}
+\end{figure}
+%%%%%%%%%%%%%
+
+ Each node has prior or conditional probability distribution (CPD) according to its structure (topology).
+
+
+ There are some real world examples, which are representing by Bayesian Networks.
+ Graph structure supports representation of knowledge, distributed algorithms for inference and learning, and intuitive interpretation.
+ \\ Alarm network is the best-known application of a real Bayes network.
+ 
+Figure~\ref{fig:alarm} shows the well-known Bayesian networks for the alarm example.
+
+%%%%%%%%%%%%%%%%
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{alarm.png}
+\end{center}
+\caption{The graphical structure of the alarm example network with probability values.}
+\label{fig:alarm}
+\end{figure}
+%%%%%%%%%%%%%%%%
+
+ There are other  real-world BN applications such as below;
+ 
+
+%%%%%%%%%%%%%%%%
+\begin{itemize}
+\item Spam filters and many other binary or multinomial classifiers are implemented using Naive BN.
+\item MS answer wizards, (printer) troubleshoots,
+\item Genetic pedigree analysis,
+\item Speech recognition (HMMs),
+\item To build medical diagnostic systems,
+\item Medical diagnosis,
+\item Gene sequence/ expression analysis,
+\item Turbo decoding problem.
+\end{itemize}
+%%%%%%%%%%%%%%%%
+
+\chapter{FUSION OF SUBJECTIVE OPINION THROUGH BEHAVIOR ESTIMATION}
+\epigraph{``Everything is theoretically impossible, until it is done.''}{Robert A. Heinlein}
+
+Effective fusion of information from diverse -- at times unreliable -- sources is an important problem to be solved for decision making domain, especially in coalition context; the purpose of  the fusion is to merge information from these sources to estimate the ground truth about a specific phenomenon. An ideal information source is the one that is able to estimate the ground truth -- e.g., by combining observed evidence -- and honestly reports its estimation. However, this may not be the case for most of the information sources. Some information sources can be competent, but not honest; they deliberately diverge from their genuine estimations while reporting. Other sources may be incompetent in observing evidence about the phenomenon and cannot estimate the ground truth at all. Their estimations of the ground truth may not correlate with the ground truth and would not conduct any useful  information during fusion.
+
+ In this chapter, a source’s estimation of ground truth is represented as a $\mathit{subjective}$ $\mathit{opinion}$, which is a belief assignment over possible values of the ground truth. However, these estimations may be affected by the behaviors of sources due to the operational context. For example, in order to mislead the decision maker -- or due to incompetence in the context -- a source may share an opinion, which does not correlate with the ground truth. Moreover, an information source may not have consistent behavior -- i.e., it may adopt different behavior strategies with varying granularities.
+
+  We note that information fusion aims to approximate the ground truth by combining opinions collected from diverse and unreliable sources. Existing fusion approaches exploit trust estimation methods to determine trustworthy and untrustworthy sources \cite{kaplan2014trust, etuk2013tidy}. Then, opinions from untrustworthy sources are eliminated during fusion. However, these approaches may fail if the sources are not always trustworthy or untrustworthy -- i.e., they adopt different behaviors with some probability. Moreover, filtering misleading information may not always be the best thing to do during fusion --i.e., misleading information can be useful if it is correlated with the ground truth. For instance, let us consider that a decision maker asks a source $\mathit{yes/no}$  questions. The source aims to mislead the decision maker by providing only wrong answers. If the decision maker determines how the source behaves, the source’s answers would be still very useful; otherwise, these answers would be highly misleading.
+
+ In this thesis, we propose a novel fusion framework based on behavior estimation \cite{sensoy2015fuse}. In this work, a decision maker queries information sources to estimate the outcome of a binomial or multinomial propositions, e.g., $\mathit{is}$ $\mathit{there}$ $\mathit{any}$ $\mathit{traffic}$ $\mathit{jam}$ $\mathit{on}$ $\mathit{the}$ $\mathit{road}$ $\mathit{I-87}$ $\mathit{now?}$. As stated earlier, we expect the answers to such queries to be subjective opinions, which can then be interpreted using Subjective Logic \cite{josang2001logic} or Dempster-Shafer theory of evidence \cite{yager2008classic}. In our framework, we adopt Subjective Logic’s interpretation of subjective opinions. That is, opinions are represented using Beta or Dirichlet distributions and they are fused by aggregating these distributions. Our system is flexible enough to accommodate various source behaviors, and for each information source, to calculate the behavior probabilities using maximum likelihood estimation. During the fusion, we efficiently determine the most likely behavior of sources using a similarity-based clustering of shared opinions influenced by the estimated source behavior probabilities. We then apply specific transformations to the shared opinions based on the behavior of their sources, and then the transformed opinions are combined to estimate the ground truth. Through extensive simulations, we showed that the proposed approach can successfully estimate behaviors of information sources and approximate the ground truth with a very small error. 
+
+
+\section{Behaviors of Information sources}
+A decision-maker agent needs to fuse opinions about a specific proposition by using behavior of information sources. If an agent wants to have an idea about a specific proposition, a decision-maker agent gathers subjective opinions from multiple sources. For an information fusion, the decision-maker agent needs to assign some trust values to these sources. Then, the agent can fuse these opinions by considering their trust values. However, as noted in Introduction chapter, these diverse information sources may be both reliable and unreliable such as some of sources may share their opinions about not having any idea for a specific proposition, some of them may give misleading information about the proposition and so on. Thus, in such scenarios, the decision-maker agent can fuse shared opinions in a wrong way. It shows that the agent can have an information, which is far from the ground truth. In our approach, if such scenarios observable, we have an effort to discard incorrect opinions for better estimation of the ground truth during the information fusion.
+
+
+In every phase of our lives, we might face with kinds of propositions such as if an earthquake occured in Istanbul or if the road D-100 is blocked. These are binary propositions, that is a decision maker asks a \textit{"yes/no "} questions like \textit{"did an earthquake occur in Istanbul?"} or \textit{"is road D-100 blocked?"} from information sources.  Information sources provide their subjective opinions about propositions in the form of Dirichlet distributions, which represents the likelihood of the probability that the proposition is true. For instance, in response to the first binary proposition of previous examples, sources provide their opinions as parameters of Dirichlet distribution, which represents a distribution for the probability that the earthquake occured in Istanbul. There can be some misleading information from unreliable sources. For the previous propositions, the decision-maker agent collects some information from malicious sources such as Bob and Carol. Bob and Carol behave differently while sharing their opinions about propositions. 
+
+
+Assume that a decision-maker agent gets information about an earthquake. The agent wants to learn \textit{"did an earthquake occur in Istanbul?"}. In this scenario, the agent collects opinions from three different information sources, who are Bob, Carol, and John. Bob provides a misleading opinion as a Dirichlet parameters like $\alpha^{Bob:x} = \langle 25, 175 \rangle$, which corresponds to the binomial opinion  $\left [ 0.12, 0.87, 0.01, 0.5, 0.5, 2 \right ]$  by using Equation~\ref{eq:rs}, where $0.12$ is the belief that the proposition is true; $0.87$ is the probability that the proposition is false; $0.01$ is the uncertainty; and the remaining parameters $0.5$ and $2$ correspond to the base rate and non-informative prior weight, respectively. In general, we can use $\omega^{Bob:x} = \left ( 0.12, 0.87, 0.01 \right ) $ without base rate and non-informative prior weight. Another source Carol, she shares her opinion about the condition of city with the Dirichlet parameters $\alpha^{Carol:x} = \langle 38, 62 \rangle$, which corresponds to the binomial opinion by using the same equation  $\left [ 0.37, 0.61, 0.02, 0.5, 0.5, 2 \right ]$, where base rate and non-informative weight are the same with Bob's opinion. Similarly, we can use $\omega^{Carol:x} = \left ( 0.37, 0.61, 0.02 \right ) $. However, she does not have any information about the road, so she can have only prediction about the condition of the city. That is, she shares a random opinion about given proposition. Bob provides a misleading opinion represented by parameters $\left( 24, 174 \right)$ by flipping the parameters within her genuine opinion.  In this scenario, the decision maker also collects information from John, who is a reliable source. He has knowledge about this proposition and he shares his opinion as $\left [ 0.98, 0.01, 0.01, 0.5, 0.5, 2 \right ]$, which is also represented $\omega^{John:x} = \left( 0.98, 0.01, 0.01\right)$. John's opinion equals to $\alpha^{John:x} = \langle 195, 5 \rangle$. If the decision maker knows the behavior of these sources, it may map Carol's opinion to a Dirichlet with parameters $\langle1, 1\rangle$, which corresponds to uniform distribution and implies that the opinion of Carol is non-informative. Similarly, Bob's opinion should be mapped to a Dirichlet with parameters $\left( 174, 24 \right)$. With mapping, the decision maker can compute a fused opinion close to the ground truth. In contrast to both Bob and Carol, John is a reliable source. He behaves honestly, so John’s opinion should be mapped to the same parameters as he shared. 
+
+ 
+\section{Modeling Information sources}
+An agent collects opinions about given proposition from information sources, which may or may not be reliable. That is, opinions of reliable information sources close to ground truth; however, unreliable sources may share misleading opinions.  Information sources can be categorized into two groups, which are trustworthy and untrustworthy sources. In our approach, if there is no correlation between the ground truth and the shared opinion, we categorize such kind of opinion as non-informative and the source called untrustworthy. In such settings, non-informative opinions are opinions that are randomly generated from a uniform distribution  with parameters $\alpha = \langle 1, 1 \rangle$. Therefore, we discard such opinions during fusion.
+\\We assume that information sources adopt specific behaviors with a certain probability while sharing their opinions. Each type of behavior $\mathit{i}$ is internally mapped to a transformation function $\mathit{\varphi_{\mathit{i}(.)}}$, that converts a genuine opinion of an information source to a shareable opinion. For instance, let us consider binomial opinion $ \alpha^{s:x} = \langle \alpha_{1}, \alpha_{2}\rangle$ of a source $\mathit{s}$ regarding the binary proposition $\mathit{x}$. If the source is honest and competent, it shares its opinion as it is --- i.e., $\varphi_{\mathit{h}
+(\alpha^{s:x})} = \langle \alpha_{1}, \alpha_{2}\rangle$. If the source is dishonest, it may not share its genuine opinion; instead it may provide a random opinion(or an opinion uncorrelated with the ground truth), --- e.g., $ \varphi_{\mathit{r}(\alpha^{s:x})} = rand()$, where $rand()$ returns random Dirichlet parameters. It is also possible that malicious sources may provide negations of their genuine opinion to confuse the fusion process. If the source behaves in this way, the provided opinion would be flipped, --- e.g., $\varphi_{\mathit{f}(\alpha^{s:x})} = \langle \alpha_{2}, 
+\alpha_{1}\rangle$. We note that the list of possible behaviors can be extended through correlation analysis and expert knowledge. For the sake of clarity and simplicity, in our examples and evaluations, we only consider the three basic behaviors mentioned above over binomial opinions.
+\\When a decision-maker agent receives opinions from information sources, it may transform the opinions into more useful ones by tempering them with the expected behavior of the respective sources. For this purpose, the agent uses the mapping function $\mathit{m_{i}(.)}$ for each behavior $\mathit{i}$ to transform the shared opinion  $\mathit{\mathbf{\alpha^{'s:x}}} = \left \langle \mathit{\alpha_{1}^{'}, \alpha_{2}^{'} }\right \rangle$ of a source $\mathit{s}$ as follows: If the agent believes that the source is honest, the transformation would be $\mathit{m_{h}\left ( \mathbf
+{\alpha^{'\mathit{s:x}}} \right )} = \mathbf{\alpha^{'\mathit{s:x}}}$. If the agent believes that the source provides an opinion uncorrelated with the ground truth (e.g., a random opinion), the 
+transformation would be $\mathit{m_{r}\left ( \mathbf{\alpha^{'\mathit{s:x}}} \right )} = \left \langle 1 , 1 \right \rangle$, which corresponds to uniform beta distribution; so the shared opinion is 
+neglected. If the agent believes that the source flips its genuine opinion before sharing, the transformation would be $\mathit{m_{f}\left ( \mathbf{\alpha^{'\mathit{s:x}}} \right )} = \left \langle \alpha 
+_{2}^{'} , \alpha _{1}^{'} \right \rangle $.
+\\In such environments, to make the necessary transformation before fusion, the agent may estimate the behavior profile of each information source. Given $\mathit{k}$ behavior types, the 
+behavior profile for a specific source $\mathit{s}$ is a vector $\mathbf{t^{\mathit{s}}}$ of $\mathit{k}$ elements, where each element $\mathit{t_{i}^{s}}$ is the expected probability that the source 
+has the behavior $\mathit{i}$ such that $\sum_{i=1}^{k} \mathit{t_{i}^{s}} = 1$.
+\\ The agent computes the behavior profile of a source \textit{s} using maximum likelihood method \cite{mendel1995lessons}. For this purpose, the agent uses its own opinion and the opinions 
+of the sources about the common propositions. By common propositions, we refer to the propositions that both the agent and the sources have opinions about. Let us assume that the agent 
+and a source have opinions for \textit{n} common propositions. The agent then uses the likelihood function in Equation~\ref{eq:loglikelihood} to estimate the behavior profile $\textit{t}^{s}$ of the source, where $
+\alpha ^{a:x}$ corresponds to the opinion of the agent about the proposition \textit{x} while $m_{i}\left ( \alpha ^{s:x} \right )$ corresponds to the transformation of the source’s opinion for the 
+proposition given that it adopts behavior \textit{i}.
+
+\begin{equation}
+\label{eq:loglikelihood}
+L\left ( t^{s} | \alpha ^{a:1}, \alpha ^{s:1}, ..., \alpha ^{a:n}, \alpha ^{s:n}\right ) = \prod_{x = 1}^{n} \int_{p} \left ( f\left ( p | \alpha ^{a:x} \right ) \times \sum_{i = 1}^{k} t_{i}^{s} \times  f\left ( p | m_{i}\left ( 
+\alpha ^{s:x} \right ) \right )\right )d_{p}
+\end{equation}
+
+
+By maximizing the likelihood function in Equation~\ref{eq:loglikelihood}, the agent can calculate the value of the behavior profile of information sources $\textit{t}^{s}$. In this equation, the function includes the conditional probability that the behavior profile of sources given opinions of agents and sources. That is, how does the opinion of source compatible with the opinion of agent for the same proposition? We can efficiently compute this function using the \textit{log likelihood} method. For this equation, the logarithm of this function is concave. Thus, we can use gradient ascent, which can be useful for such kind of concave function. Moreover, the agent cannot calculate this function when there is no common proposition — i.e., \textit{n} = 0. In such case, the agent may use a priori probabilities to compose a default behavior 
+profile for the source — e.g., a uniform behavior profile where $\textit{t}_{i}^{k} = 1 / k$. After initialization, the agent may recalculate the value of the behavior of information sources using its personal opinions. 
+
+\section{Fusion of Opinions}
+Until this section, we define how an agent uses its own opinions about common propositions to model behavior profiles of information sources. In this section, we describe how the decision-maker agent fuse shared opinions using information sources behaviors when new proposition presented.
+
+
+\subsection{Estimating Source Behavior}
+Each information source provides its opinion for a new proposition such as $\mathit{y}$ with its personal behavior after applying to the corresponding transformation function. Such behaviors based on some probabilities, which are trust values of information sources. Actually, a decision-maker agent has an initial information about behavior profile of information sources, which are estimated for current proposition.
+
+
+After applying the adaptable transformation function to the shared opinions, a querent gets the behavior profile of information sources.  By observing the behavior profile of sources, the querent can get expectation probabilities for each behavior type. However, when information sources share their opinions, the querent may estimate their behavior types.  That is, the querent may find the true behavior type which is the source has adopted. Furthermore, behavior type of information source may usually flip, so at this time, it may share a malicious opinion and sometimes shares a truthful opinion. However, for the new proposition, information source may share a truthful opinion. The agent may exploit behavior profiles of sources and their opinions about the current proposition. That is, if an untrustworthy source provides an opinion that complies with the opinions of trustworthy sources, it is more likely that the untrustworthy source provides a truthful opinion for this specific case.
+
+
+For each source $s$, the agent aims to find an elementary vector $\mathbf{z}^{s}$ whose length is equivalent to the number of behavior types. This is a vector that has only one element equivalent to one and all others are zero, i.e., if $z_{i}^{s} =1$, then $z_{j}^{s} =0$ for all $j\neq i$. This vector indicates which behavior the source $s$ adopted while proving its opinion for the proposition $y$. In order to estimate behaviors of information sources while providing their opinions for this proposition, the agent may find $\mathbf{z}$ vectors that maximizes the likelihood function in Equation~\ref{eq:behVector}.
+
+\begin{equation}
+\label{eq:behVector}
+L\left ( \mathbf{z}^{1},\ldots,\mathbf{z}^{n}|\mathbf{\alpha}^{1:y},\ldots,\mathbf{\alpha}^{n:y},\mathbf{t}^{1},\ldots,\mathbf{t}^{n} \right ) = \int_{\mathbf{p}}\prod_{s=1}^{n}\prod_{i=1}^{k}\left ( t_{i}^{s}\times f\left ( \mathbf{p}|m_{i}\left ( \alpha^{s:y} \right ) \right ) \right )^{z_{i}^{s}} d\mathbf{p}
+\end{equation}
+
+
+Finding the $\mathbf{z}$ vectors that maximizes the likelihood in Equation~\ref{eq:behVector} is NP-complete \cite{boyd2004convex}. The complexity of testing all possible $\mathbf{z}$ vectors is $O\left ( k^{n} \right )$, where $k$ is the number of behavior types and $n$ is the number of information sources.
+
+
+As defined in chapter II-4, an opinion is represented as a combination of belief vector, base rate vector, and non-informative prior weight. Opinions about the same proposition may have the same base rate vector, and non-informative prior weight. Therefore, we can ignore these components and project each opinion onto belief space. As we learned before, a source provides their opinions as belief space parameters (\textit{b, d, u}) or evidence space parameters $\left( r, s \right) $. Furthermore, the evidence space parameters does not  have an upper bound. That is, sum of the Dirichlet parameters for an opinion cannot exceed one. We can clearly observe an example binomial opinion, its base rate vector, non-informative weight, and expectation value in 
+Figure~\ref{fig:triangle}. In such settings, a confusion can occur in belief space. For instance, consider the binomial opinions: $\left [ 0.92, 0.03, 0.05, 0.5, 0.5, 2 \right ]$ and $\left [0.97, 0.02, 0.01, 0.5, 0.5, 2 \right]$ or it can represent without base rate vector and non-informative weight as $(0.92, 0.03, 0.05)$ and $(0.97, 0.02, 0.01)$, which correspond to Dirichlet parameters $\left \langle 37.8, 2.2 \right \rangle$ and $\left \langle 195, 5 \right \rangle$, respectively. These opinions are very close in belief space, while their Dirichlet parameters are very different.
+
+
+In order to estimate $\mathbf{z}$ vectors efficiently, we propose to exploit the closeness of similar opinions in belief space. There is only one ground truth for a proposition, therefore, the same or similar opinions about this proposition may imply same or similar source behaviour. If two opinions about the same proposition are similar enough, the $\mathbf{z}$ vectors for these opinions may be the same. In order to estimate $\mathbf{z}$ vectors efficiently, the agent may first determine similar opinions by clustering them in belief space, then it assigns the same  $\mathbf{z}$ vectors to the similar opinions in the same clusters. For this purpose, we propose to use hierarchical clustering \cite{webb}, which is based on euclidean distance and a similarity threshold $\delta$.
+
+Once the agent determines clusters $\left \{ c_{1},\ldots,c_{m} \right \}$ of similar opinions, it determines $\mathbf{z}$ vectors for these clusters such that the likelihood function in Equation~\ref{eq:behVectorM} is maximized. The complexity of clustering is $O\left ( n^{2} \right )$ and that of testing all possible $\mathbf{z}$ vectors is $O\left ( k^{m} \right )$. The general upper bound for $m$ is fixed and depends only on the similarity threshold $\delta$; it is independent of the number of opinions.
+
+\begin{equation}
+\label{eq:behVectorM}
+L\left ( \mathbf{z}^{1},\ldots,\mathbf{z}^{m}| c_{1},\ldots,c_{m} ,\mathbf{t}^{1},\ldots,\mathbf{t}^{n} \right ) = \int_{\mathbf{p}}\prod_{j=1}^{m}\left ( \prod_{\mathbf{\omega ^{s:y}}\epsilon c_{j}} \prod_{i=1}^{k}\left ( t_{i}^{s}\times f\left ( \mathbf{p}|m_{i}\left ( \alpha^{s:y} \right ) \right ) \right )^{z_{i}^{j}}\right )d\mathbf{p}
+\end{equation}
+
+
+If an opinion $\mathbf{\omega ^{s:y}}$ is in cluster $c_{j}$, the estimated $\mathbf{z}$ vector for $c_{j}$ is taken as the $\mathbf{z}$ vector for the source $s$; it determines the estimated behavior of $s$ while sharing the opinion.  
+
+\subsection{Estimating Ground Truth}
+Until this section, we model information sources, estimate the source behaviors, and categorize similar opinions in belief space. Our aim is to fuse shared opinions by the decision-maker agent using the estimated behaviors of information sources. Thus, in this section, we formalize that how do we fuse the shared opinions by the decision-maker agent using the estimated source behaviors. We estimate ground truth using likelihood function. The equation below formalizes the likelihood function for $\mathbf{p}$, given the shared opinions such as $\alpha^{1:y},\ldots,\alpha^{n:y}$ and the estimated behaviors of the sources for the proposition $\mathit{y}$ such as $ z^{1},\ldots,z^{n}$. This likelihood function is not a distribution, but multiplication of multiple Dirichlet distributions.
+%In this section, we describe how the shared opinions are fused by the agent using the estimated source behaviors. The equation below formalizes the likelihood function for $\mathbf{p}$, given the shared opinions and the estimated behaviors of the sources for the proposition $\mathit{y}$. This likelihood function is not a distribution, but multiplication of multiple Dirichlet distributions.
+
+\begin{equation}
+\label{eq:groundtruth}
+L\left ( \mathbf{p|\alpha^{1:y},\ldots,\alpha^{n:y},z^{1},\ldots,z^{n}} \right ) = \prod_{s=1}^{n}\prod_{i=1}^{k}f\left ( \mathbf{p}|m_{i}\left (\alpha^{s:y} \right ) \right )^{z_{i}^{s}}
+\end{equation}
+
+
+In this likelihood function, approximation of a single Dirichlet distribution $f\left ( \mathbf{p| \alpha^{+}} \right )$ is found by using the estimation of the fused opinion to approximate the ground truth. The equation below calculates the Dirichlet parameters $\alpha^{+}$ of the fused opinion by summing the evidence from the individual Dirichlet distributions involved in the multiplication, as in the consensus fusion operator of Subjective Logic \cite{josang2002consensus}. Equation~\ref{eq:fusion} formalizes the computation as follows. 
+
+
+\begin{equation}
+\label{eq:fusion}
+\alpha^{+} = Wa^{y} + \sum_{s=1}^{n}\sum_{i=1}^{k} z_{i}^{s}\times \left ( m_{i}\left ( \alpha^{s:y} \right ) - Wa^{y} \right )
+\end{equation}
+
+\section{Evaluation}
+In this section, we extensively evaluate our approach utilizing simulations. In order to perform these evaluations,
+we have implemented a multiagent system composed of a decision-making agent—i.e., the querent—and multiple information sources. At each simulation, the decision maker queries information sources to find the ground truth about a binary proposition. Competent sources can observe the evidence about the proposition and combine it to generate an opinion close to the ground truth. However, the opinions shared with the decision maker are determined by the behavior of sources. The collected opinions are binomial; each opinion corresponds to a Beta distribution—a univariate Dirichlet distribution. Let us note that this simplification is not a limitation and our approach is applicable for any type of propositions.
+
+\subsection{Simulated Behaviors}
+We define three types of behaviors for information sources: 1) \textit{Honest Competent} —i.e., a competent source displays honest behavior by sharing its opinion as it is which is close to the ground truth; 2) \textit{Flipping Competent} —i.e., a competent source displays flipping behavior by sharing an opinion which is produced by flipping the Dirichlet parameters of its genuine opinion; and 3) \textit{Random} —i.e., a source displays a random behavior by sharing a randomly generated opinion which is not correlated with the ground truth. Random behavior corresponds to the behaviors of both incompetent sources and competent sources who deliberately produce random opinions.
+
+We randomly determine behavior probability vector $p^{s}$ for each source $\textit{s};$ the vector contains $p_{h}^{s}$, $p_{f}^{s}$, and $p_{r}^{s}$, which refer to the individual probabilities for honest, flipping, and random behaviors for the source such that $ p_{h}^{s} + p_{f}^{s} + p_{r}^{s} = 1.$ We formalized our simulations in such a way that each information source adopts each type of three behaviors with some probability. However, one of these three behaviors is more likely for each source, i.e., have higher probability. If a source adopts honest behaviour more likely, it is called \textit{h}-dominated. We have similar terminology for the flipping and random behavior types, i.e., \textit{f}-dominated and \textit{r}-dominated. If a source \textit{s} is \textit{i}-dominated, we set $p_{i}^{s} = 1 - 2\phi $ and $p_{ij}^{s} = \phi $ for any $j \epsilon \left \{ \textit{h, f, r} \right \} \setminus  i$, where $\phi$ is a parameter such that $0 \leq \phi < 1 /3.$
+
+In our simulations, ratios of sources are fixed as $R_{h} = 0.2, R_{f} = 0.3, R_{r} = 0.5 $, which correspond to the ratios of \textit{h}, \textit{f}, and \textit{r}-dominated information sources, respectively.
+
+All simulations are run in a standard PC with 4 RAM and 2.13 GHz Intel Core 2 Duo processor.
+
+\subsection{Benchmarking Fusion Methods}
+We compare our fusion approach with two fusion methods based on the consensus fusion operator and discounting operator of Subjective Logic \cite{josang2011subjective}.
+
+
+Let $\omega _{x}^{s} = \left ( b, d, u, a, W  \right )$ be the opinion of a source s about a binary proposition \textit{x} and $t_{s}$ be the trustworthiness of \textit{s} for the decision-maker agent. Then, the discounting operator $\otimes$ is defined as
+
+\begin{equation}
+\omega _{x}^{s}\otimes t_{s} = [b \times t_{s}, d\times t_{s}, u + (1-t)\times (b+d), a, W]
+\end{equation}
+
+
+That is, using discounting operator, the uncertainty of the opinion is increased inversely proportional to the trustworthiness of its source. In the literature the trust value $t_{s}$ usually corresponds to the probability that the source s is honest and
+competent. i.e., $t_{s} = p_{h}^{s}$.
+
+
+The first fusion method we use for benchmarking is called \textit{Discounted Consensus (DC)} and based on applying discounting before consensus operator. Given behavior probabilities of sources, this fusion method is defined as follows:
+
+$
+DC(\omega _{x}^{s_{1}}, \omega _{x}^{s_{2}},\ldots, \omega _{x}^{s_{n}}|p^{s_{1}}, p^{s_{2}},\ldots, p^{s_{n}}) = \otimes (\omega _{x}^{s_{1}}\otimes p_{h}^{s_{1}}, \omega _{x}^{s_{2}}\otimes p_{h}^{s_{2}}, ..., \omega _{x}^{s_{n}}\otimes p_{h}^{s_{n}})
+$
+
+
+
+The discounted consensus method makes use of only the opinions from trustworthy sources – ones with honest behavior. However, opinions from the flipping agents may be useful as well. Therefore, we introduce \textit{Behavioral Discounted Consensus (BDC)}, which extends the discounted consensus fusion by considering other behaviors, i.e., flipping behavior in this specific case:
+
+$BDC(\omega _{x}^{s_{1}}, \omega _{x}^{s_{2}},\ldots, \omega _{x}^{s_{n}}|p^{s_{1}}, p^{s_{2}},\ldots, p^{s_{n}}) = \otimes (H, F)$, where
+\begin{align*} 
+H &=  \otimes (\omega _{x}^{s_{1}}\otimes p_{h}^{s_{1}}, \omega _{x}^{s_{2}}\otimes p_{h}^{s_{2}},\ldots, \omega _{x}^{s_{n}}\otimes p_{h}^{s_{n}}), \\ 
+F &= \otimes (m_{f}(\omega _{x}^{s_{1}})\otimes p_{f}^{s_{1}}, m_{f}(\omega _{x}^{s_{2}})\otimes p_{f}^{s_{2}},\ldots, m_{f}(\omega _{x}^{s_{n}})\otimes p_{f}^{s_{n}})
+\end{align*}
+
+
+
+\subsection{Simulation Results}
+We evaluated our approach in two steps. In the first step, we analyzed how successful our approach is while estimating behavior probabilities of information sources. In the second step, given the behavior probabilities of the sources, we analyzed how successful our approach in fusing opinions compared to the benchmarking methods.
+\\Each experiment is repeated at least 10 times and their means are demonstrated in the figures. The presented results are significant with respect to the paired \textit{student-t} test with 95\% confidence interval.
+
+\subsubsection{Behavior Estimation Results}
+The decision-maker agent estimates behavior probabilities for each information source as described in Section III.2. That is, for each source \textit{s}, the agent computes the probability vector $t^{s}$ that maximizes the likelihood function in Equation~\ref{eq:loglikelihood} using \textit{n} opinions about common propositions. While doing, so the agent uses gradient ascent algorithm with blocking for constraints \cite{boyd2004convex}. We compute the estimation error for $t^{s}$ given the actual behavior probabilities $p^{s}$. The error is between zero and $\sqrt{2}$, and computed as:
+
+\begin{equation}
+error\left ( t^{s} | p^{s}\right ) = \sqrt{\left ( t_{h}^{s} - p_{h}^{s}\right )^{2} + \left ( t_{f}^{s} - p_{f}^{s}\right )^{2} + \left ( t_{r}^{s} - p_{r}^{s}\right )^{2}}
+\end{equation}
+
+
+Figure~\ref{fig:behEstErr} demonstrates the average estimation error as the number of opinions is varied. Our experiments indicate that the estimation error is around 0.225 when \textit{n} = 5; however, it goes below 0.1 when 10 or more opinions are used. As the number of opinions are increased, the error does not change much. Therefore, we can conclude that our approach for behavior estimation is successful even if the number of used opinions are as low as 10.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{Figure2.png}
+\caption{Average behavior estimation error.}
+\label{fig:behEstErr}
+\end{figure}
+
+Figure~\ref{fig:avegTime} demonstrates the average time consumed for behavior estimation. It takes less than 50 milliseconds to estimate
+the behavior probabilities when 10 opinions are used; when the number of opinions are increased to 100, the estimation
+time was only creased by 37 milliseconds. Furthermore, the behavior estimation does not increase rapidly for much larger number of opinions—e.g., it only takes about 95 milliseconds for 500 opinions. Therefore, our approach successfully estimates behavior probabilities at a low complexity.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Figure3.png}
+\end{center}
+\caption{Average time used for behavior estimation.}
+\label{fig:avegTime}
+\end{figure}
+
+\subsubsection{Fusion Results}
+In this section, we evaluate our fusion approach with respect to the benchmarking fusion methods, given the behavior probabilities of information sources.
+
+At each experiment, we create a binary proposition x with a ground truth $gt_{x}$ – the probability that the proposition is \textit{true}. Information sources observe evidence about the ground truth, and compose their genuine opinions. When queried by the decision-making agent, the sources share their opinions for the proposition based on specific behaviors they adopted. After receiving opinions from a number of sources, the agent fuses these opinions using the proposed approach FUSE-BEE or a benchmarking method: DC or BDC. Let $\omega _{x} = \left [ b_{x}, d_{x}, u_{x}, a^{x}, W \right ]$ be the fused opinion. We compute the fusion error given the ground truth $gt_{x}$ as follows:
+
+\begin{equation}
+error\left ( \omega _{x} | gt_{x}\right ) = \sqrt{\left ( b_{x} - gt_{x}\right )^{2} + \left ( d_{x} + gt_{x} - 1\right )^{2} + \left ( t_{r}^{s} - p_{r}^{s}\right )^{2}}
+\end{equation}
+
+
+When queried for an opinion, each source randomly adopts a behavior based on its behavior probability vector $p_{x}$, which is generated using the parameter $\phi$. In the first set of our simulations, we set $\phi = 0.15.$ In this setting, a source dominated by $ i \epsilon \left \{ h, f, r \right \}$ adopts the behavior i with probability $0.7$, and adopts each of other two behaviors with probability $0.15$. That is, there is no source which consistently adopts the same behavior, but sources may switch between different behaviors.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Figure4.png}
+\end{center}
+\caption{Average fusion error for $\phi = 0.15$.}
+\label{fig:fusErr}
+\end{figure}
+
+Figure~\ref{fig:fusErr} demonstrates the average fusion error for different approaches when the number of sources is varied between five and one million; for clarity, logarithm of the number of sources are shown in the x-axis. Our results indicate that the proposed approach achieves very low error rate around 0.01 when more than 80 sources are queried. For lower number of source, the fusion error is also much lower than error rates of benchmarking approaches. For instance, with only five sources, the error of FUSE-BEE is around 0.23 and decreases to 0.1 when the number of sources increased to 10. On the other hand, the fusion error of the benchmarking methods oscillate between 0.4 and 0.5 when 10 or more sources are queried. The performance of DC is lower when the number of sources are low, because DC does not consider flipping behavior, i.e., opinions from \textit{f}-dominated sources are mostly omitted.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Figure5.png}
+\end{center}
+\caption{Average time for clustering and fusion.}
+\label{fig:clusFusion}
+\end{figure}
+
+Figure~\ref{fig:clusFusion} demonstrates time used for clustering and total fusion time for the proposed approach in seconds. The figure indicates that the most of the fusion time is used for clustering. While clustering, we use hierarchical clustering in opinion space with similarity threshold 0.15. Using this threshold, our approach produced around \textit{eight} clusters on the average during fusion process. The number of clusters does not depend on the number of opinions for large number of opinions. Fusion of 563 opinions from one million information sources takes around 900 seconds (15 minutes) on the average while it is reduced to around 15 seconds for 10, 000 sources.
+
+We also examine how successful our approach in estimating source behaviors (i.e., z vectors) during fusion process.
+Figure~\ref{fig:avegErrDuringFusion} demonstrates that our approach fails in estimating behaviors of less than 5\% of sources when number of sources are 50 or more.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Figure6.png}
+\end{center}
+\caption{Average percentage error in estimating source behavior during fusion.}
+\label{fig:avegErrDuringFusion}
+\end{figure}
+
+Lastly, we analyzed the performance of the fusion methods when information sources behave consistently. That is, we have another setting where $\phi$ is set to 0.001. Therefore, in this setting, the sources almost always adopt the same behavior. Figure~\ref{fig:avegErrConsistent} demonstrates average fusion error in this setting. As expected, in this trivial setting, all fusion methods achieve a low error rate, while the error of DC is higher for low number of sources, since it omits useful information from flipping sources while the number of sources are already low.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Figure7.png}
+\end{center}
+\caption{Average fusion error when sources are consistent.}
+\label{fig:avegErrConsistent}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{BAYESIAN STRUCTURE LEARNING}
+\epigraph{``Today's posterior is tomorrow's prior''}{Lindley(1972)}
+In this chapter we make some preliminary studies for learning Bayesian Networks. This learning captures dependencies between the features of proposition and the behavior probabilities that occurs according to the both features of proposition and estimated behavior of information sources probabilities. In such settings, a decision-maker agent can automatically learn behavior types of information sources so that can capture new behavior models and incorporates those models into the framework. Furthermore, the behavior of an information source may depend on its context, thus we have in view an extension to our work where it accommodates a context-aware behavior estimation model. Where, agents may change their opinions when they have some information about features of propositions. Thus, it may also impacts on fusion of information at the end of decision process. For instance, to create feature set that some of them are dependent with the proposition but others are independent. In this case, if an agent learn these dependent features, they may behave differently.
+
+
+In the previous chapter, we used Equation~\ref{eq:loglikelihood} and transformation function to modeled behavior types of information sources. In this equation, we use the maximum likelihood function to estimate behavior of sources probabilities. This technique generally gets robust results. However, in this chapter, we have features which are dependent or independent to the propositions. Thus, we try to learn the behavior of information sources by using Bayes' rule instead of using the maximum likelihood function. It demonstrates that we can learn behavior of information sources probability values using with probabilities, which are priors, likelihoods, and conditional probabilities from truth table. At the end of this first step, we can get reasonable trust values which are very close to a ground truth. For each behavior type, the difference between estimated behavior probabilities and the ground truth value is smaller than 0.02. 
+
+After the learning step, we can continue to use with the same techniques in Chapter III. We automatically learn to estimate behavior profiles of each source, which are also called trust values. By using these estimated probabilities, we want to describe and propose an approach how an agent fuse shared opinions from sources when new propositions are presented. Our aim in overall studies in this thesis, can we modeled to the information fusion process if we know the behavior of information sources?   
+
+
+\section{Methods and Techniques}
+We set our dataset for feature detection by using Monte Carlo sampling with considerable number of data. In the learning step, we use K2 search algorithm and in the structure setting step, we use Jayes, which is an open source Bayesian Network library in Java based.
+
+\subsection{Monte Carlo Simulation}
+The term "Monte Carlo" first used by Stanislaw Ulam and John von Neumann in the late 1940's who respectively worked on nuclear weapons projects at the Los Alamos National Laboratory, and programmed the ENIAC computer using Monte Carlo (MC) calculations. Ulam and von Neumann used Monte Carlo method as a Los Alamos code word for the stochastic simulations they applied to building better atomic bombs. We have reliable information about the starting point of MC method from Ulam. 
+
+
+Monte Carlo method is a statistical sampling of a mathematical function using random numbers. It is useful for independent random variables such as features in our framework. More clearly, the MC simulation can approximate solutions through statistical sampling.
+ 
+ 
+ To clarify for our extended approach, we use Monte Carlo method (simulation) for sampling. Before using MC method, we define probabilities, which represent to the dependency between feature and its proposition. Thus, we implement MC method to the generated Bayesian Networks to identify the dependencies. Then, MC simulation steps as follows:
+ \\In order to, to map the binary outcome to $\left \{\mathit{ 0, 1} \right \}$, which means $\left \{\textit{false, true}  \right \}$.
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{algorithm}
+\caption{Monte Carlo Sampling}\label{euclid}
+\begin{algorithmic}[1]
+\Procedure{Monte Carlo}{}
+\State $iter \gets \text{the number of iterations}$
+\State $rand \gets \text{a uniformly distributed random variable in [0,1)}$
+\State $\mathit{x_{k}} \gets \text{any features of proposition},$ $\mathit{k \epsilon 1,2,..., n }$
+\BState \emph{top}:
+\If {$rand < \mathit{p_{1}}$} 
+\State to set $\mathit{x_{1} = 1}$
+\Else { $ \mathit{x_{1} = 0}$}
+\EndIf
+\State \textbf{end ${\textbf{if}}$ }
+\If {$ \mathit{x_{1} = 0}$}
+\State $P\left ( x_{2} = 0 | x_{1} = 0 \right ) \gets  p_{00}$ and $P\left ( x_{2} = 1 | x_{1} = 0 \right )  \gets  p_{01}$.
+\BState \emph{ Similarly}:
+\State $P\left ( x_{2} = 0 | x_{1} = 1 \right ) \gets  p_{10}$ and $P\left ( x_{2} = 1 | x_{1} = 1 \right )  \gets  p_{11}$
+\BState \emph{loop}:
+\State $rand \gets \text{to pick another uniform random variable}$
+\If {$rand < \mathit{p_{11}}$} 
+\State to set $\mathit{x_{2} = 1}$
+\Else { $ \mathit{x_{2} = 0}$}
+\EndIf
+\State \textbf{end ${\textbf{if}}$ }
+\State Once to pick the value for  $ \mathit{x_{2}},$ to continue with $ \mathit{x_{3}}, ... , \mathit{x_{n}}$
+\State \textbf{close};
+\EndIf
+\State \textbf{end ${\textbf{if}}$ }
+\State \textbf{goto} \emph{top}.
+\State \textbf{end ${\textbf{Monte Carlo}}$ }
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+  Initially, we define a domain of possible inputs, which are two kinds of probabilities as follow: 
+\\ $\mathbf{1.}$ A set of initial (prior) probabilities $: p\left ( x = 0 \right ) = p_{0},$ and $ p\left ( x = 1 \right ) = p_{1} = 1 - p_{0}$
+\\ $\mathbf{2.}$ A set of transition (conditional) probabilities: $: p\left ( x_{2} = i | x_{1} = j\right ) = p_{ij} , $ $ i,j\epsilon \left \{ 0, 1 \right \}$
+ 
+  To create sampling data using with Monte Carlo simulation method. We create five nodes that two of them are dependent features with proposition, third and fourth ones are independent, and the last node is a behavior node called as class node. Then, we can use previous algorithm to set data. Also, we need to assign the number of iterations (sampling size). The output as follows:
+
+\begin{figure}[h]
+%\begin{minipage}{\textwidth}
+%Let's we create sampling data using with Monte Carlo simulation method. We create five nodes that two of them are %dependent features with proposition, third and fourth nodes are independent, and the last node is a behavior node %called as class node. Then, we can use previous algorithm to set data. Also, we need to assign the number of %iterations(sampling size). The output as follows:
+%\end{minipage}
+\label{fig:mcs}
+\begin{minipage}{.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.6]{weka1.png}
+\end{center}
+\caption{Monte Carlo simulation results}
+\end{minipage}
+\end{figure}
+
+Figure 13 demonstarates the sampling data. We have five attributes and their discrete values. The attribute of class represents behavior of sources, which are $\left \{ \textit{honest}, \textit{flip}, \textit{random} \right \}$.
+
+
+\subsection{Tools and Programming languages}
+For learning of a dependency structure between dependent feature and its proposition, we use Weka\cite{weka}. Weka is a collection of machine learning algorithms. It contains applications and tools for preprocessing, classification, clustering, association, attribute selection, and visualization in explorer. Moreover, it has an experiment and knowledge flow environment. Weka also allows to implement various Bayesian Network (BN) classifier algorithms. We can summarize main concepts as follows; structure learning of BNs, local score metrics implementation, global score metrics implementation, parameter estimation, GUI for BN, and so on.
+
+\subsection{Classifiers and Algorithms}
+As a classifier, we use Bayes Net classifier with Simple Estimator and K2 search algorithms. Simple Estimator is used for estimating the conditional probability tables of a Bayes network (BN) once the structure has been learned. K2 search algorithm is a score-based heuristic search algorithm in BN. There are many local search algorithms in BN such as Genetic search, Hill Climbing search, B search, Tabu search. We use K2 algorithm as a classifier of BN for detection of feature-proposition dependencies. This BN learning algorithm uses a hill climbing algorithm restricted by an order on the variables. By this way, K2 algorithm searches to learn the BN structure for initial topological ordering, so in general, we can say that K2 is a heuristic search algorithm for constructing a BN from the data. 
+
+\ K2 algorithm's pseudo code is given in Algorithm 2:
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{algorithm}
+\caption{K2 algorithm}
+\label{euclid}
+\begin{algorithmic}[1]
+\Procedure{K2}{}
+\State \textit{Input:} A set of \textit{n} nodes, an ordering on the nodes, an upper bound \textit{u} on the number of parents a node may have, and a database \textit{D} containing \textit{m} cases. 
+\State \textit{Output:} For each node, a printout of the parents of the node. 
+\For{ $i:=1$ \textbf{to} n}
+    \State $\pi _{i} :=  \O ;$
+    \State $P_{old} := f\left ( i, \pi _{i} \right );$
+    \State OKToProceed $:=$ \textbf{true };
+    \While{OKToProceed and $\left | \pi _{i} \right | < u$ }
+    \State let $ \textit{z} $ be the node in $Pred\left ( x_{i} \right ) - \pi _{i}$ that maximizes $f\left ( i, \pi _{i} \cup \left \{ z \right \}\right );$
+    \State $P_{new} := f\left ( i, \pi _{i} \cup \left \{ z \right \}\right );$
+    \If{$P_{new} > P_{old}$}
+       \State $P_{old} := P_{new};$
+       \State $\pi _{i} := \pi _{i} \cup \left \{ z \right \};$
+       \Else { OKToProceed := \textbf{false};}
+     \EndIf
+         \EndWhile
+         \State \textbf{end ${\textbf{while}}$ }
+\EndFor
+\State \textbf{end ${\textbf{for}}$ }
+\State \textbf{end ${\textbf{K2}}$ }
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+where: 
+\\ $ f\left ( i, \pi _{i}\right ) = \prod_{j=1}^{q_{i}} \frac{\left ( r_{i} - 1 \right )!}{\left ( N_{ij} +r_{i} -1 \right )!} \prod_{k=1}^{r_{i}} \alpha _{ijk}! $
+\\ $  \pi _{i} :$ set of parents of node $x_{i}$ 
+\\ $ q_{i} = \left | \o _{i} \right | $
+\\ $ \o _{i} : $ list of all possible instantiations of the parents of $x_{i}$ in database \textit{D}. That is, if $p_{1}, p_{2},...,p_{s}$ are the parents of  $x_{i}$ then $ \o _{i}$ is the Cartesian product $\left \{ v_{1}^{p_{1}}, v_{2}^{p_{1}},...,v_{r_{p_{1}}}^{p_{1}} \right \}*...*\left \{ v_{1}^{p_{s}}, v_{2}^{p_{s}},...,v_{r_{p_{1}}}^{p_{s}} \right \}$ of all the possible values of attributes $p_{1}$ through $p_{s}$. 
+\\ $r_{i} = \left | V_{i} \right |$
+\\ $V_{i}: $ list of all possible values of the attribute $x_{i}$
+\\ $\alpha _{ijk}:$ number of cases (i.e. instances) in \textit{D} in which the attribute $x_{i}$ is instantiated with its $k^{th}$ value, and the parents of $x_{i}$ in $\pi _{i}$ are instantiated with the $j^{th}$ instantiation in $\o _{i}$.
+\\ $N_{ij} = \sum_{k=1}^{r_{i}} \alpha _{ijk}$. That is, the number of instances in the database in which the parents of $x_{i}$ in $\pi _{i}$ are instantiated with the $j_{th}$ instantiation in $\o _{i}$.
+
+
+For instance, assume that we want to learn structure for the previous scenario from the MC algorithm step. If we use BN with K2 search algorithm, we have a structure as follows:
+
+\begin{figure}[ht!]
+     \begin{center}
+%
+        \subfigure[Bayes Net + K2 algorithm]{%
+            \label{fig:first}
+            \includegraphics[width=0.5\textwidth]{weka2.png}
+        }%
+        \subfigure[The probability values of \textit{first-feature} node for each behavior type of sources.]{%
+           \label{fig:second}
+           \includegraphics[height=0.423\textwidth]{weka3.png}
+        }
+%
+    \end{center}
+    \caption{Using Bayes Net classifiers and K2 algorithms}
+\end{figure}
+
+
+Figure~\ref{fig:first} demostrates the structure of proposition-feature pair. The \textit{First-feature} and \textit{second-feature} nodes are dependent to the \textit{Class} node. Also, we can get conditional probabilities like $p\left ( class|f1 \right )$, which represents the probability of feature given the behavior type of source in Figure~\ref{fig:second}. It actually proves that using Bayes Net classifier with K2 algorithm achieves to learn structure in a reasonable time such as for this example, it takes only 0.14 seconds.
+
+%%%%%%%%%%%%%%%%%%%%
+\chapter{Conclusion}
+\epigraph{``The important thing is not to stop questioning. Curiosity has its own reason for existing.''}{Albert Einstein}
+In this thesis, we have proposed a statistical approach for behavior estimation of information sources and fusion of information for subjective opinions. Our approach proposes information fusion by considering unreliable information sources. That is, we take into consideration that each information source can have different behavior. Thus, the fusion approach can strengthen the validity of the results. Through extensive simulations, we have shown that it efficiently and successfully estimates the behavior probabilities of information sources. We use the maximum likelihood function to estimate the probabilities of behavior types. Then, we can get consistent results through proper usage of transformation function for behavior types. If information sources do not consistently reflect the same behavior, other approaches have a high fusion error. In our approach, fusion error is minimized in both settings, whether the behavior of sources is consistent or not. 
+
+
+In this work, we have developed a system that is capable of adding and extracting features of proposition. The extended model can automatically learn behavior types of sources. In the behavior estimation step for the extended model, our approach successfully estimates probabilities for each behavior type of information sources. Through simulations, we have shown that these probability values are very close to the ground truth. That is, the difference between the probability of estimated behavior type values and the ground truth is around 0.015. 
+
+
+In this thesis, we have assumed that the behavior types are \textit{honest}, \textit{flip}, and \textit{random}. In Chapter IV, we make some preliminary studies for context-aware model. In future, we can extend our approach. First, we want to learn that what is the result of information fusion for context-aware model? We can implement our approach on different settings such as weather post-cast, e-commerce, and real human relationship system. Furthermore, we plant to add new behavior types, which are of a similar behavior format type as humans’. For instance, in real life, people sometimes can be so pessimistic while sharing their opinions and evaluating situations. In this respect, we can use the same equations that are described in Section III.3. Equations 19, 20 and 21 can be used to calculate ground truth and fuse opinions. 
+
+ 
+
+\nocite{*}
+
+%\chapter*{REFERENCES}
+\addcontentsline{toc}{chapter}{REFERENCES}
+%\section{References}
+
+\begin{thebibliography}{99}
+
+\input{references.tex}
+
+\end{thebibliography}
+
+
+\appendix
+%\chapter{Some Ancillary Stuff}
+
+\begin{postliminary}
+
+\end{postliminary}
+
+\end{document}
